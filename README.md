@@ -51,4 +51,18 @@ npm run preview
 - quota Appartamento 1 = differenza contascatti × prezzo medio;
 - quota Appartamento 2 = importo totale − quota Appartamento 1.
 
-Le letture sono progressive, mentre il consumo della bolletta riguarda esclusivamente il periodo fatturato. Tutti i calcoli avvengono nel browser; non sono usati database, cookie, API o servizi esterni.
+Le letture sono progressive, mentre il consumo della bolletta riguarda esclusivamente il periodo fatturato.
+
+## Configurazione Supabase
+
+1. Crea un progetto su Supabase.
+2. Apri **SQL Editor → New query**, incolla `supabase/schema.sql` ed esegui lo script.
+3. In **Authentication → URL Configuration** imposta come Site URL `https://NOMEUTENTE.github.io/calcolo-bolletta/` e aggiungi lo stesso indirizzo ai Redirect URLs.
+4. In GitHub apri **Settings → Secrets and variables → Actions**.
+5. In **Variables** crea `VITE_SUPABASE_URL` con il Project URL.
+6. In **Secrets** crea `VITE_SUPABASE_PUBLISHABLE_KEY` con la Publishable key (o la chiave `anon` legacy).
+7. Rilancia il workflow da **Actions → Pubblica su GitHub Pages → Run workflow**.
+
+Non usare mai nel frontend la chiave `service_role`, una Secret key, la password del database o la stringa PostgreSQL. Lo schema abilita la Row Level Security e consente a ogni utente autenticato di accedere soltanto alle proprie bollette.
+
+L'app permette registrazione/accesso, salvataggio, consultazione dello storico, modifica e cancellazione. I valori calcolati vengono ricalcolati dal database tramite trigger prima di ogni inserimento o aggiornamento.
