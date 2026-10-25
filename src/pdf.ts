@@ -100,7 +100,7 @@ export function downloadSummaryPdf(title: string, filename: string, sections: Pd
   };
 
   for (const section of sections) {
-    if (page.y < 105) newPage();
+    if (page.y < 150) newPage();
     page.y -= 4;
     drawText(page, section.heading.toLocaleUpperCase("it-IT"), 42, page.y, 10, true, primary);
     drawLine(page, 42, page.y - 8, 553, page.y - 8, accent, 2);
@@ -115,7 +115,12 @@ export function downloadSummaryPdf(title: string, filename: string, sections: Pd
       const valueLines = hasLabel ? [] : wrap(value, 88);
       const rowHeight = hasLabel ? Math.max(29, labelLines.length * 11 + 12) : Math.max(25, valueLines.length * 12 + 10);
 
-      if (page.y - rowHeight < 68) newPage();
+      if (page.y - rowHeight < 68) {
+        newPage();
+        drawText(page, section.heading.toLocaleUpperCase("it-IT") + " · CONTINUA", 42, page.y, 9, true, primary);
+        drawLine(page, 42, page.y - 8, 553, page.y - 8, accent, 2);
+        page.y -= 20;
+      }
       drawRect(page, 42, page.y - rowHeight + 3, 511, rowHeight, index % 2 === 0 ? PALE : WHITE);
       if (hasLabel) {
         labelLines.forEach((part, lineIndex) => {
