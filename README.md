@@ -46,6 +46,15 @@ npm run preview
 
 ## Calcoli
 
+### Luce
+
+La modalità luce conserva la logica esistente: contascatti progressivo per l'Appartamento 1, consumo residuo per l'Appartamento 2, confronto tra ripartizione proporzionale e ripartizione con quota fissa e quota potenza divise al 50%. I relativi calcoli non sono stati modificati.
+
+### Acqua
+
+La modalità acqua usa letture progressive in m³, consumo totale fatturato e importo totale della bolletta. Mostra due criteri: importo interamente proporzionale ai consumi; oppure quota fissa inserita dall'utente divisa al 50% e parte restante ripartita in proporzione ai m³. È uno strumento di ripartizione di una bolletta esistente, non un motore di calcolo delle tariffe ufficiali del gestore. I valori acqua sono salvati separatamente da quelli luce nel localStorage del dispositivo.
+
+
 - differenza contascatti = lettura attuale − lettura precedente;
 - prezzo medio = importo totale ÷ consumo totale del periodo;
 - quota Appartamento 1 = differenza contascatti × prezzo medio;
