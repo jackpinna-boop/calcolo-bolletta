@@ -12,3 +12,11 @@
 .water-formula-box small{color:#087f8c}
 @media(max-width:930px){.water-workspace{grid-template-columns:1fr}}
 @media(max-width:570px){.utility-switch{width:100%}.utility-switch button{flex:1;padding:12px 8px;font-size:12px}.water-form-card,.water-result{padding:22px 18px;border-radius:20px}}
+
+/* Download riepiloghi PDF condivisibili */
+.pdf-download{display:flex;align-items:center;justify-content:center;gap:9px;width:100%;margin:14px 0 4px;padding:14px 16px;border:1px solid #f4aa19;border-radius:12px;background:#f4aa19;color:#17233a;font-size:13px;font-weight:800;line-height:1.35;box-shadow:0 7px 18px #f4aa1920;transition:transform .15s ease,box-shadow .15s ease}
+.pdf-download:hover{transform:translateY(-1px);box-shadow:0 10px 22px #f4aa1930}
+.pdf-download span{font-size:18px;line-height:1}
+.water-pdf-download{background:#7be0df;border-color:#7be0df;color:#10343d;box-shadow:0 7px 18px #087f8c20}
+.water-pdf-download:hover{box-shadow:0 10px 22px #087f8c30}
+@media print{.pdf-download{display:none}}
