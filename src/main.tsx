@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import ReactDOM from "react-dom/client";
 import "./style.css";
+import WaterApp from "./WaterApp";
 
 type FormState = {
   previous: string;
@@ -62,7 +63,7 @@ function Field({ id, label, hint, suffix, value, onChange, error }: {
   );
 }
 
-function App() {
+function ElectricityApp({ onSwitchToWater }: { onSwitchToWater: () => void }) {
   const [form, setForm] = useState<FormState>(emptyForm);
   const [details, setDetails] = useState(false);
   const [notice, setNotice] = useState(false);
@@ -146,6 +147,10 @@ function App() {
       <div className="ambient one" />
       <div className="ambient two" />
       <section className="shell">
+        <nav className="utility-switch" aria-label="Seleziona utenza">
+          <button type="button" className="active" aria-pressed="true">⚡ Bolletta luce</button>
+          <button type="button" className="water-tab" aria-pressed="false" onClick={onSwitchToWater}>💧 Bolletta acqua</button>
+        </nav>
         <header>
           <div className="logo">€</div>
           <div>
@@ -238,4 +243,24 @@ function App() {
   );
 }
 
+function App() {
+  const [utility, setUtility] = useState<"electricity" | "water">("electricity");
+  if (utility === "electricity") return <ElectricityApp onSwitchToWater={() => setUtility("water")} />;
+  return <main>
+    <div className="ambient one" /><div className="ambient two" />
+    <section className="shell">
+      <nav className="utility-switch" aria-label="Seleziona utenza">
+        <button type="button" aria-pressed="false" onClick={() => setUtility("electricity")}>⚡ Bolletta luce</button>
+        <button type="button" className="active water-tab" aria-pressed="true">💧 Bolletta acqua</button>
+      </nav>
+      <header className="water-header">
+        <div className="logo water-logo">💧</div>
+        <div><p className="eyebrow water-eyebrow">Strumento personale</p><h1>Calcolo Bolletta</h1><p className="intro">Ripartisci la bolletta idrica tra due appartamenti in base ai consumi rilevati.</p></div>
+        <div className="privacy"><i />I dati restano sul dispositivo</div>
+      </header>
+      <WaterApp />
+      <footer>Le letture sono progressive · Il consumo fatturato riguarda il singolo periodo · I calcoli avvengono nel browser</footer>
+    </section>
+  </main>;
+}
 ReactDOM.createRoot(document.getElementById("root")!).render(<React.StrictMode><App /></React.StrictMode>);
