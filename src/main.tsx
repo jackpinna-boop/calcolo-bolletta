@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import ReactDOM from "react-dom/client";
 import "./style.css";
+import { downloadSummaryPdf } from "./pdf";
 import WaterApp from "./WaterApp";
 
 type FormState = {
@@ -225,6 +226,36 @@ function ElectricityApp({ onSwitchToWater }: { onSwitchToWater: () => void }) {
                 <div><span>Totale bolletta</span><strong>€ {fmt(values.totalAmount)}</strong></div>
               </div>
 
+              <button className="pdf-download" type="button" onClick={() => downloadSummaryPdf("Riepilogo bolletta elettrica", "riepilogo-bolletta-luce", [
+                { heading: "Dati della bolletta", lines: [
+                  "Lettura contascatti precedente Appartamento 1: " + fmt(values.previous, 3),
+                  "Lettura contascatti attuale Appartamento 1: " + fmt(values.current, 3),
+                  "Consumo Appartamento 1: " + fmt(difference, 3) + " kWh",
+                  "Consumo Appartamento 2: " + fmt(kwhTwo, 3) + " kWh",
+                  "Consumo totale fatturato: " + fmt(values.totalKwh, 3) + " kWh",
+                  "Importo totale bolletta: EUR " + fmt(values.totalAmount),
+                  "Quota fissa: EUR " + fmt(values.fixedFee),
+                  "Quota potenza: EUR " + fmt(values.powerFee),
+                  "Parte variabile: EUR " + fmt(variableAmount),
+                ]},
+                { heading: "Metodo 1 - Ripartizione proporzionale", lines: [
+                  "Appartamento 1: EUR " + fmt(proportionalOne) + " (" + fmt(shareOne * 100, 2) + "%)",
+                  "Appartamento 2: EUR " + fmt(proportionalTwo) + " (" + fmt(shareTwo * 100, 2) + "%)",
+                  "Verifica somma: EUR " + fmt(proportionalOne + proportionalTwo),
+                ]},
+                { heading: "Metodo 2 - Quota fissa e potenza al 50%", lines: [
+                  "Quota fissa per appartamento: EUR " + fmt(fixedPerApartment),
+                  "Quota potenza per appartamento: EUR " + fmt(powerPerApartment),
+                  "Appartamento 1: EUR " + fmt(splitFixedOne),
+                  "Appartamento 2: EUR " + fmt(splitFixedTwo),
+                  "Verifica somma: EUR " + fmt(splitFixedOne + splitFixedTwo),
+                ]},
+                { heading: "Confronto tra i metodi", lines: [
+                  "Differenza Appartamento 1 (Metodo 2 meno Metodo 1): EUR " + fmt(splitFixedOne - proportionalOne),
+                  "Differenza Appartamento 2 (Metodo 2 meno Metodo 1): EUR " + fmt(splitFixedTwo - proportionalTwo),
+                  "Prezzo medio indicativo: EUR " + fmt(averageUnitPrice) + " per kWh",
+                ]},
+              ])}><span aria-hidden="true">↓</span> Scarica riepilogo PDF - luce</button>
               <button className="details" type="button" onClick={() => setDetails(!details)}>Dettaglio del calcolo <span>{details ? "⌃" : "⌄"}</span></button>
               {details && <div className="formula">
                 <p><span>Consumo App. 1</span>{fmt(values.current, 3)} − {fmt(values.previous, 3)} = {fmt(difference, 3)} kWh</p>
