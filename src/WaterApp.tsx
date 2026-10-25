@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { downloadSummaryPdf } from "./pdf";
 
 type WaterForm = { previous: string; current: string; totalAmount: string; totalM3: string; fixedFee: string };
 const emptyWaterForm: WaterForm = { previous: "", current: "", totalAmount: "", totalM3: "", fixedFee: "" };
@@ -116,6 +117,33 @@ export default function WaterApp() {
         </section>
         <div className="comparison"><div><span>Differenza App. 1</span><strong>{splitFixedOne - proportionalOne >= 0 ? "+" : ""}€ {fmtWater(splitFixedOne - proportionalOne)}</strong></div><div><span>Differenza App. 2</span><strong>{splitFixedTwo - proportionalTwo >= 0 ? "+" : ""}€ {fmtWater(splitFixedTwo - proportionalTwo)}</strong></div></div>
         <div className="stats"><div><span>Quota fissa</span><strong>€ {fmtWater(values.fixedFee)}</strong></div><div><span>Parte restante</span><strong>€ {fmtWater(variableAmount)}</strong></div><div><span>Consumo totale</span><strong>{fmtWater(values.totalM3, 3)} m³</strong></div><div><span>Totale bolletta</span><strong>€ {fmtWater(values.totalAmount)}</strong></div></div>
+        <button className="pdf-download water-pdf-download" type="button" onClick={() => downloadSummaryPdf("Riepilogo bolletta idrica", "riepilogo-bolletta-acqua", [
+          { heading: "Dati della bolletta", lines: [
+            "Lettura precedente Appartamento 1: " + fmtWater(values.previous, 3) + " m3",
+            "Lettura attuale Appartamento 1: " + fmtWater(values.current, 3) + " m3",
+            "Consumo Appartamento 1: " + fmtWater(difference, 3) + " m3",
+            "Consumo Appartamento 2: " + fmtWater(m3Two, 3) + " m3",
+            "Consumo totale fatturato: " + fmtWater(values.totalM3, 3) + " m3",
+            "Importo totale bolletta: EUR " + fmtWater(values.totalAmount),
+            "Quota fissa inserita: EUR " + fmtWater(values.fixedFee),
+            "Parte restante a consumo: EUR " + fmtWater(variableAmount),
+          ]},
+          { heading: "Metodo 1 - Ripartizione proporzionale", lines: [
+            "Appartamento 1: EUR " + fmtWater(proportionalOne) + " (" + fmtWater(shareOne * 100, 2) + "%)",
+            "Appartamento 2: EUR " + fmtWater(proportionalTwo) + " (" + fmtWater(shareTwo * 100, 2) + "%)",
+            "Verifica somma: EUR " + fmtWater(proportionalOne + proportionalTwo),
+          ]},
+          { heading: "Metodo 2 - Quota fissa al 50%", lines: [
+            "Quota fissa per appartamento: EUR " + fmtWater(fixedPerApartment),
+            "Appartamento 1: EUR " + fmtWater(splitFixedOne),
+            "Appartamento 2: EUR " + fmtWater(splitFixedTwo),
+            "Verifica somma: EUR " + fmtWater(splitFixedOne + splitFixedTwo),
+          ]},
+          { heading: "Confronto tra i metodi", lines: [
+            "Differenza Appartamento 1 (Metodo 2 meno Metodo 1): EUR " + fmtWater(splitFixedOne - proportionalOne),
+            "Differenza Appartamento 2 (Metodo 2 meno Metodo 1): EUR " + fmtWater(splitFixedTwo - proportionalTwo),
+          ]},
+        ])}><span aria-hidden="true">↓</span> Scarica riepilogo PDF - acqua</button>
         <button className="details" type="button" onClick={() => setDetails(!details)}>Dettaglio del calcolo <span>{details ? "⌃" : "⌄"}</span></button>
         {details && <div className="formula">
           <p><span>Consumo App. 1</span>{fmtWater(values.current, 3)} − {fmtWater(values.previous, 3)} = {fmtWater(difference, 3)} m³</p>
